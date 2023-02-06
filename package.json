@@ -1,0 +1,24 @@
+{
+  "name": "week-12-challenge",
+  "version": "1.0.0",
+  "description": "* [Description](#description)\r * [Installation](#installation)\r * [Usage](#usage)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MauritzMaj/Employee-Tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MauritzMaj/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/MauritzMaj/Employee-Tracker#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "mysql2": "^3.1.0"
+  }
+}
