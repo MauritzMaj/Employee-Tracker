@@ -92,7 +92,7 @@ async function viewDepartments() {
         department_id AS "Dept #", 
         name AS "Department"
       FROM emp_role
-      INNER JOIN department
+      JOIN department
       ON department.id = department_id`,
       function (err, data) {
         if (err) throw err;
@@ -105,11 +105,20 @@ async function viewDepartments() {
   // view all employees 
   async function viewEmployees() {
     db.query(
-      `SELECT employee.id, employee.first_name, 
-      employee.last_name, emp_role.title, department.name, 
-      emp_role.salary FROM employee, role, 
-      department WHERE department.id = emp_role.department_id AND emp_role.id = employee.role_id 
-      ORDER BY employee.id ASC`,
+      `SELECT id AS ID, 
+        employee.first_name AS FirstName, 
+        employee.last_name AS LastName, 
+        emp_role.title AS Role, 
+        emp_role.salary AS Salary, 
+        department.name AS Department,
+        manager.last_name AS Manager
+  FROM employee
+  JOIN department 
+  ON department.id = employee.role_id 
+  JOIN emp_role 
+  ON emp_role.id = employee.role_id
+  JOIN employee manager ON employee.manager_id = manager.id
+  ORDER BY employee.id ASC`,
       function (err, data) {
         if (err) throw err;
         console.table(data)
