@@ -105,13 +105,11 @@ async function viewDepartments() {
   // view all employees 
   async function viewEmployees() {
     db.query(
-      `SELECT first_name AS "First Name", last_name AS "Last Name", 
-      emp_role.title AS Role, emp_role.salary 
-      AS Salary, department.name AS Department
-      FROM employee 
-      INNER JOIN department 
-      ON department.id = employee.role_id 
-      LEFT JOIN emp_role on emp_role.id = employee.role_id`,
+      `SELECT employee.id, employee.first_name, 
+      employee.last_name, emp_role.title, department.name, 
+      emp_role.salary FROM employee, role, 
+      department WHERE department.id = emp_role.department_id AND emp_role.id = employee.role_id 
+      ORDER BY employee.id ASC`,
       function (err, data) {
         if (err) throw err;
         console.table(data)
@@ -212,17 +210,30 @@ async function viewDepartments() {
   
   // add an employee 
   async function addEmployee() {
-    db.query("SELECT * FROM emp_role", async function (err, results) {
-      if (err) throw err;
+    let employeeQuery = "SELECT * FROM employee";
+    let roleQuery = "SELECT * from emp_role";
+    
+   
+
+    const employees = await employeeList();  
+    const managerList = employees.map(function (item) {
+      return item.NAME
+    })
+   
+    
+    db.query(employeeQuery, function (err, employees) {
+    db.query(roleQuery, function (err, roles) {
+      
+    if(err) throw err;
+
+    const rolesList = roles.map(function (item) {
+      return item.title;
+
+    })
+    
+          
   
-      const rolesList = results.map(function (item) {
-        return item.title;
-      })
-  
-      const employees = await employeeList();  
-      const managerList = employees.map(function (item) {
-        return item.NAME
-      })
+      
   
       inquirer.prompt([
         {
@@ -248,30 +259,36 @@ async function viewDepartments() {
           choices: managerList
         }
       ])
-        .then(function (answer) {
-          for (var i = 0; i < results.length; i++) {
-            if (results[i].title === answer.choice) {
-              answer.role_id = results[i].id;
+      .then(function(response) {
+        
+        for (var i=0; i < roles.length; i++) {
+            if(roles[i].title === response.choice) {
+                response.role_id = roles[i].id;
             }
-          }
-  
-          var query = "INSERT INTO employee SET ?"
-          const values = {
-            first_name: answer.firstName,
-            last_name: answer.lastName,
-            role_id: answer.role_id,
-            manager_id: answer.manager,
-          }
-  
-          db.query(query, values, function (err, result) {
-            if (err) throw err;
-            console.log(answer.firstName + " has been added to employee list");
+        }
+        for (var i=0; i < employees.length; i++) {
+            if(employees[i].last_name === response.manager) {
+                response.manager_id = employees[i].id;
+            }
+        }
+
+        var query = "INSERT INTO employee SET ?"
+
+        const values = {
+            first_name: response.firstName,
+            last_name: response.lastName,
+            role_id: response.role_id,
+            manager_id: response.manager_id
+        }
+        db.query(query, values, function(err) {
+            if(err) throw err;
+            console.log(`${response.firstName} ${response.lastName} has been added!`);
             init();
-          })
+        })
+
         });
-  
     })
-  };
+})};
 
 
 
