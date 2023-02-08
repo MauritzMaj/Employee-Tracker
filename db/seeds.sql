@@ -1,4 +1,6 @@
-INSERT INTO department (department_name)
+USE employees_db;
+
+INSERT INTO department (name)
 VALUES
 ('MANAGEMENT'),
 ('SALES'),
@@ -6,7 +8,7 @@ VALUES
 ('DEVELOPERS'),
 ('SECURITY');
 
-INSERT INTO role (title, salary, department_id)
+INSERT INTO emp_role (title, salary, department_id)
 VALUES
 ('General Manager', 200000, 1),
 ('Assistant Manager', 170000, 1),
@@ -30,7 +32,7 @@ VALUES
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
 ('John', 'Smith', 1, null),
-('Anna', 'Delvaux', 2, 1)
+('Anna', 'Delvaux', 2, 1),
 ('Derrick', 'Jones', 3, 1),
 ('Marjorie', 'Spits', 4, 1),
 ('Collin', 'Taylor', 5, 1),
@@ -47,11 +49,3 @@ VALUES
 
 ('Nabil', "Sankur", 13, 5),
 ("Kendrick", "Potter", 14, 5);
-
-{
-        name: "choice",
-        type: "rawlist",
-        message: "who is the employee's manager?",
-        choices: managerList
-        
-      }
