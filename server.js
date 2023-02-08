@@ -273,6 +273,8 @@ async function viewDepartments() {
     })
   };
 
+
+
   // Update Employee Role
   async function updateRole() {
 
@@ -284,17 +286,17 @@ async function viewDepartments() {
       })
 
     const employees = await employeeList();  
-    const employeeList = employees.map(function (item) {
+    const Listemployees = employees.map(function (item) {
       return item.NAME
     })
 
 
     inquirer.prompt([
       {
-        name: "chooseemployee",
+        name: "employeename",
         type: "rawlist",
-        message: ["Which employee would you like to update?"],
-        choice: employeeList
+        message: "Which employee would you like to update?",
+        choices: Listemployees
       },
       {
         name: "updateRole",
@@ -304,15 +306,13 @@ async function viewDepartments() {
       },
 
     ]).then(function (answer) {
-      var query = "INSERT INTO emp_role SET ?"
-      var addRole = db.query(query, [{ title: answer.newRole }], function (err) {
+      db.query = "UPDATE emp_role SET title WHERE id=${answers.id}  INTO emp_role VALUES (?)",
+      [{ title: answer.updateRole }], function (err) {
         if (err) throw err;
         console.table("role updated!");
         init();
-      })
+      }});
     })
-  })
-
-};
+  };
   
 
