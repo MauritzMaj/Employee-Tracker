@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3001;
 
 
 // Connect to database
-const db = mysql.createdb(
+const db = mysql.createConnection(
   {
     host: 'localhost',
     user: 'root',
