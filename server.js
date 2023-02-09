@@ -315,9 +315,9 @@ async function viewDepartments() {
         db.query(`SELECT * FROM employee;`, (err, res) => {
             if (err) throw err;
             const employees = res.map(function(item) { 
-              return ({name: item.first_name + ' ' + item.last_name, value: item.employee_id })
+              return ({name: item.first_name + ' ' + item.last_name, value: item.id })
             })
-        
+            console.log(employees);
               
             inquirer.prompt([
                 {
@@ -333,19 +333,19 @@ async function viewDepartments() {
                     choices: rolesList
                 },
             ]).then((response) => {
-                connection.query(`UPDATE employee SET ? WHERE ?`, 
+                db.query(`UPDATE employee SET ? WHERE ?`, 
                 [
                     {
                         role_id: response.newRole,
                     },
                     {
-                        employee_id: response.employee,
+                        id: response.employee,
                     },
                 ], 
                 (err, res) => {
                     if (err) throw err;
                     console.log(`\n Successfully updated employee's role in the database! \n`);
-                    startApp();
+                    init();
                 })
             })
         })
