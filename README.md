@@ -45,6 +45,7 @@ Created by user: MauritzMaj
 https://github.com/MauritzMaj/TeamBuilder
 
 link to video tutorial: https://drive.google.com/file/d/16vybPa8j30IgC1GvzDD-QoD8-1cynl0P/view
+
 screenshot of application:
 
 <img width="564" alt="image" src="https://user-images.githubusercontent.com/105758175/217882931-9184fa6a-4a24-4844-8852-4c83bc2123f7.png">
