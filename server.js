@@ -304,13 +304,21 @@ async function viewDepartments() {
 
 
   // Update Employee Role
-  updateRole = () => {
+  async function updateRole() {
     db.query(`SELECT * FROM emp_role;`, (err, res) => {
         if (err) throw err;
-        let roles = res.map(emp_role => ({name: emp_role.title, value: emp_role.id }));
+        const rolesList = res.map(function (item) {
+          return ({name: item.title, value: item.id })
+        
+        })
+
         db.query(`SELECT * FROM employee;`, (err, res) => {
             if (err) throw err;
-            let employees = res.map(employee => ({name: employee.first_name + ' ' + employee.last_name, value: employee.employee_id }));
+            const employees = res.map(function(item) { 
+              return ({name: item.first_name + ' ' + item.last_name, value: item.employee_id })
+            })
+        
+              
             inquirer.prompt([
                 {
                     name: 'employee',
@@ -322,7 +330,7 @@ async function viewDepartments() {
                     name: 'newRole',
                     type: 'rawlist',
                     message: 'What is their new role?',
-                    choices: roles
+                    choices: rolesList
                 },
             ]).then((response) => {
                 connection.query(`UPDATE employee SET ? WHERE ?`, 
