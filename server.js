@@ -212,7 +212,7 @@ async function viewDepartments() {
   
   // collect employees
   const employeeList = () => new Promise((resolve, reject) => {
-    db.query("SELECT CONCAT(first_name,' ',last_name) AS NAME FROM employee", (err, results) => {
+    db.query("SELECT last_name AS NAME FROM employee", (err, results) => {
       if (err) throw err;
   
       return resolve(results);
@@ -264,7 +264,7 @@ async function viewDepartments() {
           choices: rolesList
         },
         {
-          name: "choice2",
+          name: "manager",
           type: "rawlist",
           message: "who is the employee's manager?",
           choices: managerList
@@ -304,43 +304,44 @@ async function viewDepartments() {
 
 
   // Update Employee Role
-  async function updateRole() {
-
-    db.query("SELECT * FROM emp_role", async function (err, results) {
-      if (err) throw err;
-  
-      const rolesList = results.map(function (item) {
-        return item.title;
-      })
-
-    const employees = await employeeList();  
-    const Listemployees = employees.map(function (item) {
-      return item.NAME
-    })
-
-
-    inquirer.prompt([
-      {
-        name: "employeename",
-        type: "rawlist",
-        message: "Which employee would you like to update?",
-        choices: Listemployees
-      },
-      {
-        name: "updateRole",
-        type: "rawlist",
-        message: "what is the employee's new role?",
-        choices: rolesList
-      },
-
-    ]).then(function (answer) {
-      db.query = "UPDATE emp_role SET  WHERE  INTO emp_role VALUES (?)",
-      [{ title: answer.updateRole }], function (err) {
+  updateRole = () => {
+    db.query(`SELECT * FROM emp_role;`, (err, res) => {
         if (err) throw err;
-        console.table("role updated!");
-        init();
-      }});
+        let roles = res.map(emp_role => ({name: emp_role.title, value: emp_role.id }));
+        db.query(`SELECT * FROM employee;`, (err, res) => {
+            if (err) throw err;
+            let employees = res.map(employee => ({name: employee.first_name + ' ' + employee.last_name, value: employee.employee_id }));
+            inquirer.prompt([
+                {
+                    name: 'employee',
+                    type: 'rawlist',
+                    message: 'Which employee would you like to update?',
+                    choices: employees
+                },
+                {
+                    name: 'newRole',
+                    type: 'rawlist',
+                    message: 'What is their new role?',
+                    choices: roles
+                },
+            ]).then((response) => {
+                connection.query(`UPDATE employee SET ? WHERE ?`, 
+                [
+                    {
+                        role_id: response.newRole,
+                    },
+                    {
+                        employee_id: response.employee,
+                    },
+                ], 
+                (err, res) => {
+                    if (err) throw err;
+                    console.log(`\n Successfully updated employee's role in the database! \n`);
+                    startApp();
+                })
+            })
+        })
     })
-  };
+}
   
 
