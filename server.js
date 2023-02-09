@@ -105,7 +105,7 @@ async function viewDepartments() {
   // view all employees 
   async function viewEmployees() {
     db.query(
-      `SELECT id AS ID, 
+      /*`SELECT employee.id AS ID, 
         employee.first_name AS FirstName, 
         employee.last_name AS LastName, 
         emp_role.title AS Role, 
@@ -114,11 +114,13 @@ async function viewDepartments() {
         manager.last_name AS Manager
   FROM employee
   JOIN department 
-  ON department.id = employee.role_id 
+   ON emp_role.department_id = department.id
   JOIN emp_role 
-  ON emp_role.id = employee.role_id
-  JOIN employee manager ON employee.manager_id = manager.id
-  ORDER BY employee.id ASC`,
+    ON employee.role_id = emp_role.id
+  LEFT JOIN employee manager 
+      ON employee.manager_id = manager.id
+  ORDER BY employee.id ASC`,*/
+  `SELECT * FROM employee`,
       function (err, data) {
         if (err) throw err;
         console.table(data)
@@ -332,7 +334,7 @@ async function viewDepartments() {
       },
 
     ]).then(function (answer) {
-      db.query = "UPDATE emp_role SET title WHERE id=${answers.id}  INTO emp_role VALUES (?)",
+      db.query = "UPDATE emp_role SET  WHERE  INTO emp_role VALUES (?)",
       [{ title: answer.updateRole }], function (err) {
         if (err) throw err;
         console.table("role updated!");
