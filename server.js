@@ -105,21 +105,6 @@ async function viewDepartments() {
   // view all employees 
   async function viewEmployees() {
     db.query(
-      /*`SELECT employee.id AS ID, 
-        employee.first_name AS FirstName, 
-        employee.last_name AS LastName, 
-        emp_role.title AS Role, 
-        emp_role.salary AS Salary, 
-        department.name AS Department,
-        manager.last_name AS Manager
-  FROM employee
-  JOIN department 
-   ON emp_role.department_id = department.id
-  JOIN emp_role 
-    ON employee.role_id = emp_role.id
-  LEFT JOIN employee manager 
-      ON employee.manager_id = manager.id
-  ORDER BY employee.id ASC`,*/
   `SELECT * FROM employee`,
       function (err, data) {
         if (err) throw err;
@@ -317,7 +302,7 @@ async function viewDepartments() {
             const employees = res.map(function(item) { 
               return ({name: item.first_name + ' ' + item.last_name, value: item.id })
             })
-            console.log(employees);
+            
               
             inquirer.prompt([
                 {
